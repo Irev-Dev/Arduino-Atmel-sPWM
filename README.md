@@ -23,7 +23,7 @@ circuits, it does this by rapidly switching a load on and off. Another way of th
 is to consider it as a method for a digital system to output an analogue signal. Figure 1.1
 shows an example of a PWM signal.
 
-![Figure 1-1](images/PWMsin_1.png?raw=true)
+![Figure 1-1](/images/PWMsin_1.png?raw=true)
 
 There are two properties to a PWM signal, the frequency which is determined by the
 period of the signal and the duty cycle which is determined by the high-time of the signal.
