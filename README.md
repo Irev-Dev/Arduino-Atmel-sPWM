@@ -23,6 +23,8 @@ circuits, it does this by rapidly switching a load on and off. Another way of th
 is to consider it as a method for a digital system to output an analogue signal. Figure 1.1
 shows an example of a PWM signal.
 
+![Figure 1-1](images/PWMsin_1.png "Figure 1-1")
+
 There are two properties to a PWM signal, the frequency which is determined by the
 period of the signal and the duty cycle which is determined by the high-time of the signal.
 The signal in Figure 1.1 has a period of 250μS which means it switches at 4KHz. The duty-
