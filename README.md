@@ -74,7 +74,7 @@ and 10 on the Uno. The code is compatible with other Atmel micro-controllers/Ard
 though their data-sheets/schematics will need to be referenced to determine the output
 pins. Please see Chapter for a list of compatible devices.
 
-'''C
+'''C++
 #include <avr/io.h>
 #include <avr/interrupt.h>
 /* Look up tables with 200 entries each, normalised to have max value of ...
