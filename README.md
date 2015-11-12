@@ -118,3 +118,20 @@ progressively lower f c
 
 ![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/trimpot_RCfilter_2.png?raw=true "Figure")
 
+![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/smothing_1.png?raw=true "Figure")
+
+![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/smothing_2.png?raw=true "Figure")
+
+![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/smothing_3.png?raw=true "Figure")
+
+![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/smothing_4.png?raw=true "Figure")
+
+![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/smothing_5.png?raw=true "Figure")
+
+### Listening to the Signal
+
+If you don’t have an oscilloscope, listening to the signal is a useful way to determine if the sPWM is working since it is easy to hear both the 50Hz hum and the switching frequency. We can use the micro to drive a small pair of head-phones directly, putting them in series with a 1KΩ resister should protect most head-phones, as seen in Figure 4.6.
+
+![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/speaker_2.png?raw=true "Figure")
+
+It is recommended to change ’ #define SinDivisions (200) ’ down to 50 and up to 400 in order to hear the difference in switching frequencies.
