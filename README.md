@@ -2,7 +2,7 @@
 
 #### Implementation of an sPWM signal on Ardunio and Atmel micros
 
-![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/pulses_1.png?raw=true "Figure")
+![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/pulses_1.JPG?raw=true "Figure")
 
 ## Introduction
 
