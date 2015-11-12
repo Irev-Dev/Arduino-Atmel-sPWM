@@ -74,7 +74,7 @@ and 10 on the Uno. The code is compatible with other Atmel micro-controllers/Ard
 though their data-sheets/schematics will need to be referenced to determine the output
 pins. Please see Chapter for a list of compatible devices.
 
-'''smalltalk
+```smalltalk
 #include <avr/io.h>
 #include <avr/interrupt.h>
 /* Look up tables with 200 entries each, normalised to have max value of ...
@@ -121,4 +121,4 @@ TCCR1B = 0b00011001;
 TIMSK1 = 0b00000001;
 /*0000000
 1 TOV1 Flag interrupt enable.
-'''
+```
