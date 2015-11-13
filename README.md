@@ -1,4 +1,4 @@
-# Arduino-Atmel-sPWM
+# Arduino-Atmel-sPWM [![NPM version](https://badge.fury.io/js/markdown-toc.svg)](http://badge.fury.io/js/markdown-toc)
 
 #### Implementation of an sPWM signal on Ardunio and Atmel micros
 
