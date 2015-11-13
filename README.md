@@ -1,4 +1,4 @@
-# Arduino-Atmel-sPWM [![NPM version](https://badge.fury.io/js/markdown-toc.svg)](http://badge.fury.io/js/markdown-toc)
+# Arduino-Atmel-sPWM 
 
 #### Implementation of an sPWM signal on Ardunio and Atmel micros
 
@@ -94,10 +94,10 @@ void setup(){
        /*0000000
          1 TOV1 Flag interrupt enable. 
        */
-    ```
+```
 Here the timer registered have been initilised. If you ar interested in the deatails you can look up the 328p data sheet, but for now what's important is that we have set up a PWM for two pins and it call in interrupt routine for every period of the PWM.
 
-    ```c
+```c
     ICR1   = 1600;     // Period for 16MHz crystal, for a switching frequency of 100KHz for 200 subdevisions per 50Hz sin wave cycle.
     sei();             // Enable global interrupts.
     DDRB = 0b00000110; // Set PB1 and PB2 as outputs.
@@ -130,7 +130,55 @@ This interrupt service routine is call every period of the PWM, and every period
 
 Therefore each period the registeres OCR1x are loaded with the next value of their look up tables by using num to point to the next value in the array, as each period num is incremented and checked that it is below 200, if it is not below 200 in is reset to 0. The other two lines involving trig and digitalWrite are there two toggle a pin as a trigger for an osilloscope and does not impact the sPWM code.
 
-And that's it.
+And that's it. The rest of this section discusses some modifications to this code, namely we can make generate the lookup table at the start of the code, the benifits of this is we change change the switchinf frequency as well as the sPWM frequency. Code for this can be found in the sPWM_generate_lookup_table folder. The start of the code looks like this:
+
+```c
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+#define SinDivisions (200)// Sub divisions of sisusoidal wave.
+
+static int microMHz = 16; // Micro clock frequency
+static int freq = 50;     // Sinusoidal frequency
+static long int period;   // Period of PWM in clock cycles.
+static unsigned int lookUp[SinDivisions];
+static char theTCCR1A = 0b10000010; //varible for TCCR1A
+
+void setup(){
+  double temp; //Double varible for <math.h> functions.
+  
+  period = microMHz*1e6/freq/SinDivisions;// Period of PWM in clock cycles
+  
+  for(int i = 0; i < SinDivisions/2; i++){ // Generating the look up table.
+    temp = sin(i*2*M_PI/SinDivisions)*period;
+    lookUp[i] = (int)(temp+0.5);       // Round to integer.    
+  }
+```
+Notice that only the first half of the sine wave is generated, because of the way this code implements the sPMW where each of the two pins are responisble for different halves of the signal, only half the sine wave is needed. However it does require a modification to the interrupt service routine.
+
+```c
+ISR(TIMER1_OVF_vect){
+    static int num;
+    static int delay1;
+    static char trig;
+    
+    if(delay1 == 1){/*delay by one period because the high time loaded into OCR1A:B values are buffered but can be disconnected immediately by TCCR1A. */
+      theTCCR1A ^= 0b10100000;// Toggle connect and disconnect of compare output A and B.
+      TCCR1A = theTCCR1A;
+      delay1 = 0;             // Reset delay1
+    } else if(num >= SinDivisions/2){
+      num = 0;                // Reset num
+      delay1++;
+      trig ^=0b00000001;
+      digitalWrite(13,trig);
+    }
+    // change duty-cycle every period.
+    OCR1A = lookUp[num];
+    OCR1B = lookUp[num];
+    num++;
+}
+``` 
+Both output compare registers ORC1x have the same values loaded into them each period, however the output compare for each pin is enabled and disable in turns by toggling two bits in the TCCR1A resgister. It is toggle each time the look up table index (num) is reset, however it is delayed by one clock cycle, this is because when values are loaded into OCR1x registered, is is buffered where as changes in TCCR1A is implemented imediately, see the 328p datasheet for more details.
 
 ## Testing the Signal
 

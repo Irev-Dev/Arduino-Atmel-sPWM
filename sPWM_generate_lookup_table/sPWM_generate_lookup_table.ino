@@ -55,7 +55,7 @@ ISR(TIMER1_OVF_vect){
     } else if(num >= SinDivisions/2){
       num = 0;                // Reset num
       delay1++;
-      trig = trig^0b00000001;
+      trig ^=0b00000001;
       digitalWrite(13,trig);
     }
     // change duty-cycle every period.
