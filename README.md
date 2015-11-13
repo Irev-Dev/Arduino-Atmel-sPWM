@@ -19,7 +19,11 @@ Please also note that:
 <!-- toc -->
 * [Brief Theory](#brief-theory)
     - [Basic PWM](#basic-pwm)
+    - [Typical micro implementation](#typical-microcontroller-pwm-implementation)
+    - [Sinusoidal PWM](#sinusoidol-pwm)
 * [Code & Explanation](#code-and-explanation)
+    - [sPWM_Basic](#spwm_basic)
+    - [sPWM_Generate_Lookup_Table](#spwm_generate_lookup_table)
 * [Testing the Signal](#testing-the-signal)
 * [Compatibility](#compatibility)
 * [Safety](#safety)
@@ -37,7 +41,7 @@ There are two properties to a PWM signal, the frequency which is determined by t
 
 ![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/basicPWM_4.png?raw=true "Figure")
 
-### Typical micro-controller PWM implementation
+### Typical microcontroller PWM implementation
 
 This section describes how micro-controllers use timers/counters to implement a PWM signal, this description relies heavily on the figure below. Here the blue line represents a counter that resets after 16000, this gives the period of the PWM and also the switching frequency (fs), if this micro has a clock source of 16MHz, then fs will be 16×10^6/16×10^3 = 1KHz.
 
