@@ -6,21 +6,29 @@
 
 ## Introduction
 
-This document covers key concepts in the generation of a sinusoidal signal using dynamic pulse width modulation (PWM) as well as it’s implementation on Atmel microcontrollers, including Arduino boards. The code in this document is mostly C with use of Arduino code/libraries in some cases. This document assumes the reader has a fundamental under- standing of C programming. It is the aim of this document to help the hobbyist or student make rapid progress in understanding and implementing an sPWM signal. If you find any mistakes in this document or can think of improvements, perhaps you are a university tutor or lecturer, make a suggestion in the associated forum. Any significant contributors will be listed as an author
+The aim of this repo is to help the hobbyist or student make rapid progress in implementing an sPWM signal on a arduino or atmel micro, while making sure that the theory behind the sPWM and the code itself is understood. 
+
+Please also note that:
+
+ * It's assumed the reader has a basic understanding of C programming
+ * If you plan on making an inverter please read the safety section
+ * Feel free to colaborate on improving this repo
+
 
 ## Table of Contents
-
 <!-- toc -->
-
 * [Brief Theory](#brief-theory)
-* [Code & Explanation](#codeexplanation)
+* [Code & Explanation](#code-and-explanation)
+* [Testing the Signal](#testing-the-signal)
+* [Compatibility](#compatibility)
+* [Safety](#safety)
 
 <!-- tocstop -->
 
 ## Brief Theory
 ###Basic PWM
 
-Pulse width modulation’s (PWM) main use is to control the power supplied to electric circuits, it does this by rapidly switching a load on and off. Another way of thinking of it is to consider it as a method for a digital system to output an analogue signal. The figure below shows an example of a PWM signal.
+Pulse width modulation’s (PWM) main use is to control the voltage supplied to electric circuits, it does this by rapidly switching a load on and off. Another way of thinking of it is to consider it as a method for a digital system to output an analogue signal. The figure below shows an example of a PWM signal.
 
 ![Figure 1-1](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/basicPWM_3.png?raw=true "Figure 1.1")
 
@@ -42,7 +50,7 @@ A sinusoidal PWM (sPWM) signal can be constructed by dynamically changing the du
 
 Figure 1.4 shows negative pulses which is not possible on most micro-controllers. Instead normally this is implemented with two pins, one pulsing the positive half of the sin wave and the second pulsing the negative half, this is how it is implemented in this paper.
 
-## CodeExplanation
+## Code and Explanation
 
 In this chapter three examples of code are given, each adding more advanced functionality to the code. Even though this code was written with Arduino in mind the code is written in pure C, however in Chapter an example of modified code that is more Arduino friendly is given. If the signal is going to be viewed on an oscilloscope we suggest to modify the code to toggle a pin every interrupt service routine (ISR) to be used as a trigger.
 
@@ -54,6 +62,8 @@ The following C code implements an sPWM on a Atmel micro-controller. The signal 
 
 The code assumes implementation on a ATmega328 or Arduino Uno with a 16MHz clock source. This means the output pins will be PORTB1 and PORTB2 which are pins 9 and 10 on the Uno. The code is compatible with other Atmel micro-controllers/Arduinos though their data-sheets/schematics will need to be referenced to determine the output pins. Please see Chapter for a list of compatible devices.
 
+Lets walk through the code.
+
 ```c
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -62,6 +72,11 @@ The code assumes implementation on a ATmega328 or Arduino Uno with a 16MHz clock
 int lookUp1[] = {50 ,100 ,151 ,201 ,250 ,300 ,349 ,398 ,446 ,494 ,542 ,589 ,635 ,681 ,726 ,771 ,814 ,857 ,899 ,940 ,981 ,1020 ,1058 ,1095 ,1131 ,1166 ,1200 ,1233 ,1264 ,1294 ,1323 ,1351 ,1377 ,1402 ,1426 ,1448 ,1468 ,1488 ,1505 ,1522 ,1536 ,1550 ,1561 ,1572 ,1580 ,1587 ,1593 ,1597 ,1599 ,1600 ,1599 ,1597 ,1593 ,1587 ,1580 ,1572 ,1561 ,1550 ,1536 ,1522 ,1505 ,1488 ,1468 ,1448 ,1426 ,1402 ,1377 ,1351 ,1323 ,1294 ,1264 ,1233 ,1200 ,1166 ,1131 ,1095 ,1058 ,1020 ,981 ,940 ,899 ,857 ,814 ,771 ,726 ,681 ,635 ,589 ,542 ,494 ,446 ,398 ,349 ,300 ,250 ,201 ,151 ,100 ,50 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0};
 int lookUp2[] = {0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,50 ,100 ,151 ,201 ,250 ,300 ,349 ,398 ,446 ,494 ,542 ,589 ,635 ,681 ,726 ,771 ,814 ,857 ,899 ,940 ,981 ,1020 ,1058 ,1095 ,1131 ,1166 ,1200 ,1233 ,1264 ,1294 ,1323 ,1351 ,1377 ,1402 ,1426 ,1448 ,1468 ,1488 ,1505 ,1522 ,1536 ,1550 ,1561 ,1572 ,1580 ,1587 ,1593 ,1597 ,1599 ,1600 ,1599 ,1597 ,1593 ,1587 ,1580 ,1572 ,1561 ,1550 ,1536 ,1522 ,1505 ,1488 ,1468 ,1448 ,1426 ,1402 ,1377 ,1351 ,1323 ,1294 ,1264 ,1233 ,1200 ,1166 ,1131 ,1095 ,1058 ,1020 ,981 ,940 ,899 ,857 ,814 ,771 ,726 ,681 ,635 ,589 ,542 ,494 ,446 ,398 ,349 ,300 ,250 ,201 ,151 ,100 ,50 ,0};
 
+```
+
+We are going to be adressing the registeres on the atmel chip as well as using interrupts so the <avr/io.h> and <avr/interrupt.h> headers are nessisary. From there we have two arrays which have a two half sinusoidal signal entered in
+
+```c
 void setup(){
     // Register initilisation, see datasheet for more detail.
     TCCR1A = 0b10100010;
@@ -79,14 +94,24 @@ void setup(){
        /*0000000
          1 TOV1 Flag interrupt enable. 
        */
+    ```
+Here the timer registered have been initilised. If you ar interested in the deatails you can look up the 328p data sheet, but for now what's important is that we have set up a PWM for two pins and it call in interrupt routine for every period of the PWM.
+
+    ```c
     ICR1   = 1600;     // Period for 16MHz crystal, for a switching frequency of 100KHz for 200 subdevisions per 50Hz sin wave cycle.
     sei();             // Enable global interrupts.
     DDRB = 0b00000110; // Set PB1 and PB2 as outputs.
     pinMode(13,OUTPUT);
 }
+```
+ICR1 is another register that contains the length of the counter before resetting, since we have no prescale on our clock, this defines the period of the PWM to 1600 clock cycles. Then we enable interrupts. Next the two pins are set as outputs, the reason why pinMode() is not used is because the pins might change on different arduinos, they might also change on different Atmel micros, however you are using an arduino with a 328p, then this code will work. Lastly pinMode() is used to set pin 13 as an out put, we will use this later as a trigger for the osilliscope, how ever it is not nessisary.
 
+```c
 void loop(){; /*Do nothing . . . . forever!*/}
+```
+Nothing is implemented in the loop.
 
+```c
 ISR(TIMER1_OVF_vect){
     static int num;
     static char trig;
@@ -101,6 +126,11 @@ ISR(TIMER1_OVF_vect){
      }
 }
 ```
+This interrupt service routine is call every period of the PWM, and every period the duty-cycle is change. This done by changing the value in the registers OCR1A and OCR1B to the next value of the look up table as this registers hold the compare values that set the output pins low when reached as per figure .
+
+Therefore each period the registeres OCR1x are loaded with the next value of their look up tables by using num to point to the next value in the array, as each period num is incremented and checked that it is below 200, if it is not below 200 in is reset to 0. The other two lines involving trig and digitalWrite are there two toggle a pin as a trigger for an osilloscope and does not impact the sPWM code.
+
+And that's it.
 
 ## Testing the Signal
 
@@ -148,3 +178,19 @@ If you don’t have an oscilloscope, listening to the signal is a useful way to 
 ![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/speaker_2.png?raw=true "Figure")
 
 It is recommended to change ’ #define SinDivisions (200) ’ down to 50 and up to 400 in order to hear the difference in switching frequencies.
+
+## Compatibility
+
+Please let me know if you got the code to work on a device that's not listed here
+
+Compatability list:
+
+* Arduino Uno
+* Arduino Nano
+* Arduino mega2560
+
+## Safety
+
+This section is to briefly discuss safety in regards to making an inverter that steps up to  mains voltage whether that be 110 or 230. First of all I don't encourage it, I'd prefer that you didn't and I take no responsibilty for your actions. Remember 30mA can be leathal, mains voltage deserves respect.
+
+If you still choose to do so, take basic precautionary steps like: Invest in some terminals and make sure that any high voltage part of the circuit is not touchable; don't modify it while it's power up; Don't do it alone.
