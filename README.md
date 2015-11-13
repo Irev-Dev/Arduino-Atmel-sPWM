@@ -18,7 +18,7 @@ Please also note that:
 ## Table of Contents
 <!-- toc -->
 * [Brief Theory](#brief-theory)
-    -[Basic PWM](#basic-pwm)
+    - [Basic PWM](#basic-pwm)
 * [Code & Explanation](#code-and-explanation)
 * [Testing the Signal](#testing-the-signal)
 * [Compatibility](#compatibility)
