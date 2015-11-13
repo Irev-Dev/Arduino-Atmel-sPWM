@@ -26,7 +26,7 @@ Please also note that:
     - [sPWM_Generate_Lookup_Table](#spwm_generate_lookup_table)
 * [Testing the Signal](#testing-the-signal)
     - [Viewing Pulse Widths with an Osilloscope](#viewing-pulse-widths-with-an-osilloscope)
-    - [Viewing the Filtered Signal with an Oscilloscope](#viewing-the-filtered-signal-with-an-Oscilloscope)
+    - [Viewing the Filtered Signal with an Oscilloscope](#viewing-the-filtered-signal-with-an-oscilloscope)
     - [Listening to the Signal](#listening-to-the-signal)
 * [Compatibility](#compatibility)
 * [Safety](#safety)
