@@ -20,11 +20,14 @@ Please also note that:
 * [Brief Theory](#brief-theory)
     - [Basic PWM](#basic-pwm)
     - [Typical micro implementation](#typical-microcontroller-pwm-implementation)
-    - [Sinusoidal PWM](#sinusoidol-pwm)
+    - [Sinusoidal PWM](#sinusoidal-pwm)
 * [Code & Explanation](#code-and-explanation)
     - [sPWM_Basic](#spwm_basic)
     - [sPWM_Generate_Lookup_Table](#spwm_generate_lookup_table)
 * [Testing the Signal](#testing-the-signal)
+    - [Viewing Pulse Widths with an Osilloscope](#viewing-pulse-widths-with-an-osilloscope)
+    - [Viewing the Filtered Signal with an Oscilloscope](#viewing-the-filtered-signal-with-an-Oscilloscope)
+    - [Listening to the Signal](#listening-to-the-signal)
 * [Compatibility](#compatibility)
 * [Safety](#safety)
 
@@ -137,7 +140,9 @@ This interrupt service routine is call every period of the PWM, and every period
 
 Therefore each period the registeres OCR1x are loaded with the next value of their look up tables by using num to point to the next value in the array, as each period num is incremented and checked that it is below 200, if it is not below 200 in is reset to 0. The other two lines involving trig and digitalWrite are there two toggle a pin as a trigger for an osilloscope and does not impact the sPWM code.
 
-And that's it. The rest of this section discusses some modifications to this code, namely we can make generate the lookup table at the start of the code, the benifits of this is we change change the switchinf frequency as well as the sPWM frequency. Code for this can be found in the sPWM_generate_lookup_table folder. The start of the code looks like this:
+### sPWM_generate_lookup_table
+
+The rest of this section discusses some modifications to this code, namely we can make generate the lookup table at the start of the code, the benifits of this is we change change the switchinf frequency as well as the sPWM frequency. Code for this can be found in the sPWM_generate_lookup_table folder. The start of the code looks like this:
 
 ```c
 #include <avr/io.h>
@@ -191,7 +196,7 @@ Both output compare registers ORC1x have the same values loaded into them each p
 
 This chapter discusses ways to test and monitor the sPWM signal, the first section discusses using as oscilloscope which is the best method to verify the signal however an alternate and cheaper method is to use a small speaker. The 50hz signal and the underlying switching frequency is easy to hear.
 
-### Viewing Pulse Widths with an osilloscope
+### Viewing Pulse Widths with an Osilloscope
 
 Here we aim to view the individual pulses that make up the sPWM to see if they look how we would expect, that is thin pulses becoming thick and then thin again. If you are using the code sPWM_generate _lookup_table I recommend lowering the switching frequency of the sPWM by changing #define SinDivisions(200) to #define SinDivisions (50). This will make the pulses easier to see as there will be fewer of them. If you are using the Uno pin 13 will be toggled every period of the sine and so can be used as a trigger for the osilloscope. the figure below shows the wiring to the Ardurino Uno.
 
@@ -201,7 +206,7 @@ Notice we are only looking at half the signal from one of the output pins. The w
 
 ![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/pulses_2.png?raw=true "Figure")
 
-### Viewing the filtered signal with an oscilloscope
+### Viewing the filtered signal with an Oscilloscope
 
 Here we aim to view a smooth sinusoidal wave by smoothing the output of the micro with a simple low-pass RC filter as shown in Figure 4.3. 
 
