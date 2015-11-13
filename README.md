@@ -10,8 +10,12 @@ This document covers key concepts in the generation of a sinusoidal signal using
 
 ## Table of Contents
 
+<!-- toc -->
+
 * [Brief Theory](#Brief-Theory)
 * [Code & Explanation](#Code-&-Explanation)
+
+<!-- tocstop -->
 
 ## Brief Theory
 ###Basic PWM
