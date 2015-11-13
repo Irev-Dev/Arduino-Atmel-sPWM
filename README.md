@@ -206,7 +206,7 @@ Notice we are only looking at half the signal from one of the output pins. The w
 
 ![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/pulses_2.png?raw=true "Figure")
 
-### Viewing the filtered signal with an Oscilloscope
+### Viewing the Filtered Signal with an Oscilloscope
 
 Here we aim to view a smooth sinusoidal wave by smoothing the output of the micro with a simple low-pass RC filter as shown in Figure 4.3. 
 
