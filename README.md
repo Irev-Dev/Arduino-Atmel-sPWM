@@ -12,8 +12,8 @@ This document covers key concepts in the generation of a sinusoidal signal using
 
 <!-- toc -->
 
-* [Brief Theory](#Brief-Theory)
-* [Code & Explanation](#Code-&-Explanation)
+* [Brief Theory](#brief-theory)
+* [Code & Explanation](#codeexplanation)
 
 <!-- tocstop -->
 
@@ -42,7 +42,7 @@ A sinusoidal PWM (sPWM) signal can be constructed by dynamically changing the du
 
 Figure 1.4 shows negative pulses which is not possible on most micro-controllers. Instead normally this is implemented with two pins, one pulsing the positive half of the sin wave and the second pulsing the negative half, this is how it is implemented in this paper.
 
-## Code & Explanation
+## CodeExplanation
 
 In this chapter three examples of code are given, each adding more advanced functionality to the code. Even though this code was written with Arduino in mind the code is written in pure C, however in Chapter an example of modified code that is more Arduino friendly is given. If the signal is going to be viewed on an oscilloscope we suggest to modify the code to toggle a pin every interrupt service routine (ISR) to be used as a trigger.
 
