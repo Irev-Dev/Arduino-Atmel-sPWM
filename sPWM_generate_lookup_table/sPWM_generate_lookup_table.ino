@@ -59,7 +59,6 @@ ISR(TIMER1_OVF_vect){
       digitalWrite(13,trig);
     }
     // change duty-cycle every period.
-    OCR1A = lookUp[num];
-    OCR1B = lookUp[num];
+    OCR1A = OCR1B = lookUp[num];
     num++;
 }
