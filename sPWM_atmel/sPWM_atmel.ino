@@ -71,7 +71,7 @@ ISR(TIMER1_OVF_vect){
       delay1++;
     }
     // change )duty-cycle every period.
-    OCR1A = OCR1A = lookUp[num];
+    OCR1A = OCR1B = lookUp[num];
     num++;      
 }
 
