@@ -142,7 +142,7 @@ Therefore each period the registeres OCR1x are loaded with the next value of the
 
 ### sPWM_generate_lookup_table
 
-The rest of this section discusses some modifications to this code, namely we can make generate the lookup table at the start of the code, the benifits of this is we change change the switchinf frequency as well as the sPWM frequency. Code for this can be found in the sPWM_generate_lookup_table folder. The start of the code looks like this:
+The rest of this section discusses some modifications to this code, namely we can make generate the lookup table at the start of the code, the benifits of this is we change change the switching frequency as well as the sPWM frequency. Code for this can be found in the sPWM_generate_lookup_table folder. The start of the code looks like this:
 
 ```c
 #include <avr/io.h>
