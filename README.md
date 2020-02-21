@@ -48,7 +48,7 @@ There are two properties to a PWM signal, the frequency which is determined by t
 
 This section describes how micro-controllers use timers/counters to implement a PWM signal, this description relies heavily on the figure below. Here the blue line represents a counter that resets after 16000, this gives the period of the PWM and also the switching frequency (fs), if this micro has a clock source of 16MHz, then fs will be 16×10^6/16×10^3 = 1KHz.
 
-The two other values of 11200 and 800 shown as the gree and red line, they represent compare output values of the micro. When the counter reaches this values the micro can change the output of some pins. In this case two pins are set to HIGH when the counter resets and then Set low when the counter reaches each of the output compare values. This determines the high time and therefore duty-cycle of the PWM. It's important to understand how a PWM is typcialy set up in a micro, as the explanation of the code in the next section will not make sense otherwise.
+The two other values of 11200 and 8000 shown as the green and red line, they represent compare output values of the microcontroller. When the counter reaches this values the microcontroller can change the output of some pins. In this case two pins are set to HIGH when the counter resets and then Set low when the counter reaches each of the output compare values. This determines the high time and therefore duty-cycle of the PWM. It's important to understand how a PWM is typcialy set up in a microcontroller, as the explanation of the code in the next section will not make sense otherwise.
 
 ![Figure what](https://github.com/Terbytes/Arduino-Atmel-sPWM/blob/master/im/sawtooth_counter_1.png?raw=true "Figure")
 
@@ -84,7 +84,7 @@ int lookUp2[] = {0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,
 
 ```
 
-We are going to be adressing the registeres on the atmel chip as well as using interrupts so the <avr/io.h> and <avr/interrupt.h> headers are nessisary. From there we have two arrays which have a two half sinusoidal signal entered in
+We are going to be adressing the registers on the atmel chip as well as using interrupts so the <avr/io.h> and <avr/interrupt.h> headers are necessary. From there we have two arrays which have a two half sinusoidal signal entered in
 
 ```c
 void setup(){
@@ -105,7 +105,7 @@ void setup(){
          1 TOV1 Flag interrupt enable. 
        */
 ```
-Here the timer registered have been initilised. If you ar interested in the deatails you can look up the 328p data sheet, but for now what's important is that we have set up a PWM for two pins and it call in interrupt routine for every period of the PWM.
+Here the timer register have been initilised. If you are interested in the details you can look up the ATMEGA328p datasheet, but for now what's important is that we have set up a PWM for two pins and it call in interrupt routine for every period of the PWM.
 
 ```c
     ICR1   = 1600;     // Period for 16MHz crystal, for a switching frequency of 100KHz for 200 subdevisions per 50Hz sin wave cycle.
@@ -114,7 +114,7 @@ Here the timer registered have been initilised. If you ar interested in the deat
     pinMode(13,OUTPUT);
 }
 ```
-ICR1 is another register that contains the length of the counter before resetting, since we have no prescale on our clock, this defines the period of the PWM to 1600 clock cycles. Then we enable interrupts. Next the two pins are set as outputs, the reason why pinMode() is not used is because the pins might change on different arduinos, they might also change on different Atmel micros, however you are using an arduino with a 328p, then this code will work. Lastly pinMode() is used to set pin 13 as an out put, we will use this later as a trigger for the osilliscope, how ever it is not nessisary.
+ICR1 is another register that contains the length of the counter before resetting, since we have no prescale on our clock, this defines the period of the PWM to 1600 clock cycles. Then we enable interrupts. Next the two pins are set as outputs, the reason why pinMode() is not used is because the pins might change on different arduinos, they might also change on different Atmel micros, however you are using an arduino with a 328p, then this code will work. Lastly pinMode() is used to set pin 13 as an output, we will use this later as a trigger for the osilliscope, how ever it is not necessary.
 
 ```c
 void loop(){; /*Do nothing . . . . forever!*/}
@@ -138,7 +138,7 @@ ISR(TIMER1_OVF_vect){
 ```
 This interrupt service routine is call every period of the PWM, and every period the duty-cycle is change. This done by changing the value in the registers OCR1A and OCR1B to the next value of the look up table as this registers hold the compare values that set the output pins low when reached as per figure .
 
-Therefore each period the registeres OCR1x are loaded with the next value of their look up tables by using num to point to the next value in the array, as each period num is incremented and checked that it is below 200, if it is not below 200 in is reset to 0. The other two lines involving trig and digitalWrite are there two toggle a pin as a trigger for an osilloscope and does not impact the sPWM code.
+Therefore in each period the registers OCR1x are loaded with the next value of their look up tables by using num to point to the next value in the array, as each period num is incremented and checked that it is below 200, if it is not below 200 in is reset to 0. The other two lines involving trig and digitalWrite are there two toggle a pin as a trigger for an osilloscope and does not impact the sPWM code.
 
 ### sPWM_generate_lookup_table
 
