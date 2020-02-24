@@ -34,7 +34,7 @@ Please also note that:
 <!-- tocstop -->
 
 ## Brief Theory
-###Basic PWM
+### Basic PWM
 
 Pulse width modulation’s (PWM) main use is to control the voltage supplied to electric circuits, it does this by rapidly switching a load on and off. Another way of thinking of it is to consider it as a method for a digital system to output an analogue signal. The figure below shows an example of a PWM signal.
 
